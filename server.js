@@ -14,8 +14,6 @@ request(url, function(error, response, html){
 
 	latest.filter(function() {
 	    var data = $(this);
-	    console.log(data.find(".release-meta .css-truncate-target").text());
-
     	    var version, title, description;
 	    var json = { version: "", title: "", description: "" };
 
@@ -30,4 +28,4 @@ request(url, function(error, response, html){
     }
 })
 
-exports = module.exports = app; 	
+//exports = module.exports = app; 	
