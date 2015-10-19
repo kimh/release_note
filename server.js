@@ -20,10 +20,21 @@ request(url, function(error, response, html){
 	    var version = data.find(".release-meta .css-truncate-target").text().trim()
 	    var title   = data.find('.release-body .release-title').text().trim()
 	    var desc    = data.find('.release-body .markdown-body').text().trim()
-
+	    
 	    console.log("version: %s", version);
 	    console.log("title: %s", title);
 	    console.log("description: %s", desc);
+
+	    json.version = version;
+	    json.title = title;
+	    json.description = desc;
+
+	    fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
+
+		console.log('File successfully written! - Check your project directory for the output.json file');
+
+	    })
+
 	})	
     }
 })
