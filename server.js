@@ -14,10 +14,15 @@ request(url, function(error, response, html){
 	var json = { version: "", title: "", description: "" };
 
 	var version = $('.release-meta .css-truncate-target').text()
+	var title   = $('.release-body .release-title').text().trim()
+	var desc    = $('.release-body .markdown-body').text().trim()
     }
 
 
     console.log("version: %s", version);
+    console.log("title: %s", title);
+    console.log("description: %s", desc);
+
 })
 
 exports = module.exports = app; 	
