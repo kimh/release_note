@@ -8,6 +8,8 @@
     "express"    : "latest",
     "request"    : "latest",
     "cheerio"    : "latest",
-    "async": "~0.1.22"
+    "async": "~0.1.22",
+    "deep-diff"  : "latest",
+    "underscore" : "latest"
   }
 }
