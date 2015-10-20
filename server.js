@@ -100,8 +100,8 @@ function send_update_notification(option) {
 	
     
     var mail_options = {
-	from: 'Kim Hirokuni ✔ <yangkookkim@gmail.com>', // sender address
-	to: receiver_address, // list of receivers
+	from: 'Kim Hirokuni ✔ <yangkookkim@gmail.com>',
+	to: receiver_address,
 	subject: subject,
 	text: body
     };
