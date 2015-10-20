@@ -11,6 +11,7 @@
     "async": "~0.1.22",
     "deep-diff"  : "latest",
     "underscore" : "latest",
-    "nodemailer" : "latest"
+    "nodemailer" : "latest",
+    "diff"       : "latest"
   }
 }

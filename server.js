@@ -7,6 +7,7 @@ var _ = require('underscore');
 var nodemailer = require('nodemailer');
 //var express = require('express');
 //var app     = express();
+var jsdiff = require('diff');
 
 function write_output(output_file, json) {
     fs.writeFile(output_file, JSON.stringify(json, null, 4), function(err){
@@ -118,6 +119,7 @@ function check_release(name, url) {
     var dir = 'data';
     var json_file = path.join(dir, name + ".json");
     var email_subject, email_body;
+    var diff;
 
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir);}
 
@@ -129,9 +131,15 @@ function check_release(name, url) {
 	    console.log("New releases for %s", name);
 	    write_output(json_file, new_releases_json);
 
+	    jsdiff.diffJson(old_releases_json, new_releases_json).forEach(function(part) {
+		if (part.added) {
+		    diff = part.value;
+		}
+	    });
+
 	    email_subject = "New release for " + name;
-	    email_body = JSON.stringify(new_releases_json);
-	    send_update_notification({to: 'yangkookkim@gmail.com', subject: email_subject, body: email_body, dry_run: false});
+	    email_body = JSON.stringify(diff);
+	    send_update_notification({to: 'yangkookkim@gmail.com', subject: email_subject, body: email_body, dry_run: true});
 	} else {
 	    console.log("No changes for %s", name);
 	}
@@ -146,8 +154,56 @@ function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases");
 }
 
-my_release();
+//my_release();
 //docker();
 
+
+
+
+var one = "aaa"
+var other = "aaa bbb"
+
+
+var one = [
+    {
+        "name": "my_release",
+        "version": "0.0.2",
+        "title": "0.0.2 releae",
+        "description": "another releae"
+    },
+    {
+        "name": "my_release",
+        "version": "0.0.1",
+        "title": "0.0.1 release",
+        "description": "this is the first release"
+    }
+]
+
+var other = [
+    {
+        "name": "my_release",
+        "version": "0.0.4",
+        "title": "0.0.4 releaes",
+        "description": ""
+    },
+    {
+        "name": "my_release",
+        "version": "0.0.2",
+        "title": "0.0.2 releae",
+        "description": "another releae"
+    },
+    {
+        "name": "my_release",
+        "version": "0.0.1",
+        "title": "0.0.1 release",
+        "description": "this is the first release"
+    }
+]
+
+
+var diff = jsdiff.diffJson(one, other);
+diff.parsePatch("");
+
+// TODO: get a diff of json nicely.
 
 
