@@ -4,6 +4,7 @@ var cheerio = require('cheerio');
 var path = require('path');
 var assert = require('assert');
 var _ = require('underscore');
+var nodemailer = require('nodemailer');
 //var express = require('express');
 //var app     = express();
 
@@ -59,9 +60,64 @@ function github_standard_release(name, url) {
 	
 }
 
+function send_mail(user, pass, mail_opt) {
+    var transporter = nodemailer.createTransport({
+	service: 'Gmail',
+	auth: {
+            user: user,
+            pass: pass
+	}
+    });
+
+    // send mail with defined transport object
+    transporter.sendMail(mail_opt, function(error, info){
+	if(error){
+            return console.log(error);
+	}
+	console.log("Email sent to: %s", mail_opt.to);
+    });
+}
+
+function send_update_notification(option) {
+    var user, pass;
+    
+    var receiver_address = option.to;
+    var subject = option.subject;
+    var body = option.body;
+    var dry_run = option.dry_run || false;
+
+    if (process.env.RN_EMAIL_USER) {
+	user = process.env.RN_EMAIL_USER;
+    } else {
+    	throw new Error("You need to set $RN_EMAIL_USER for email notification");
+    }
+
+    if (process.env.RN_EMAIL_PASS) {
+	pass = process.env.RN_EMAIL_PASS;
+    } else {
+    	throw new Error("You need to set $RN_EMAIL_PASS for email notification");
+    }
+	
+    
+    var mail_options = {
+	from: 'Kim Hirokuni ✔ <yangkookkim@gmail.com>', // sender address
+	to: receiver_address, // list of receivers
+	subject: subject,
+	text: body
+    };
+
+    if (dry_run) {
+	console.log("Supress sending actual email");
+	console.log(mail_options);
+    } else {
+	send_mail(user, pass, mail_options);
+    }
+}
+
 function check_release(name, url) {
     var dir = 'data';
     var json_file = path.join(dir, name + ".json");
+    var email_subject, email_body;
 
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir);}
 
@@ -69,8 +125,13 @@ function check_release(name, url) {
 	var old_releases_json = read_json_output(json_file);
 
 	if (!_.isEqual(old_releases_json, new_releases_json)) {
+	//if (true) {
 	    console.log("New releases for %s", name);
 	    write_output(json_file, new_releases_json);
+
+	    email_subject = "New release for " + name;
+	    email_body = JSON.stringify(new_releases_json);
+	    send_update_notification({to: 'yangkookkim@gmail.com', subject: email_subject, body: email_body, dry_run: false});
 	} else {
 	    console.log("No changes for %s", name);
 	}
@@ -82,8 +143,11 @@ function docker() {
 }
 
 function my_release() {
-    check_release("my_release", 'https://github.com/kimh/release_note/releases');
+    check_release("my_release", "https://github.com/kimh/release_note/releases");
 }
 
 my_release();
-docker();
+//docker();
+
+
+
