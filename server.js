@@ -7,8 +7,6 @@ var _ = require('underscore');
 var nodemailer = require('nodemailer');
 //var express = require('express');
 //var app     = express();
-//var jsdiff = require('diff');
-var diff = require('deep-diff').diff;
 
 function write_output(output_file, json) {
     fs.writeFile(output_file, JSON.stringify(json, null, 4), function(err){
@@ -131,7 +129,6 @@ function check_release(name, url) {
     var dir = 'data';
     var json_file = path.join(dir, name + ".json");
     var email_subject, email_body;
-    var diff;
 
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir);}
 
@@ -163,40 +160,3 @@ function my_release() {
 
 my_release();
 //docker();
-
-//var one = [
-//    {
-//        "name": "my_release",
-//        "version": "0.0.2",
-//        "title": "0.0.2 releae",
-//        "description": "another releae"
-//    },
-//    {
-//        "name": "my_release",
-//        "version": "0.0.1",
-//        "title": "0.0.1 release",
-//        "description": "this is the first release"
-//    }
-//]
-//
-//var other = [
-//    {
-//        "name": "my_release",
-//        "version": "0.0.4",
-//        "title": "0.0.4 releaes",
-//        "description": ""
-//    },
-//    {
-//        "name": "my_release",
-//        "version": "0.0.2",
-//        "title": "0.0.2 releae",
-//        "description": "another releae"
-//    },
-//    {
-//        "name": "my_release",
-//        "version": "0.0.1",
-//        "title": "0.0.1 release",
-//        "description": "this is the first release"
-//    }
-//]
-
