@@ -9,9 +9,8 @@
     "request"    : "latest",
     "cheerio"    : "latest",
     "async": "~0.1.22",
-    "deep-diff"  : "latest",
     "underscore" : "latest",
     "nodemailer" : "latest",
-    "diff"       : "latest"
+    "sleep-async"      : "latest"
   }
 }

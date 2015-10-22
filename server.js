@@ -5,6 +5,7 @@ var path = require('path');
 var assert = require('assert');
 var _ = require('underscore');
 var nodemailer = require('nodemailer');
+var sleep = require('sleep-async')();
 //var express = require('express');
 //var app     = express();
 
@@ -163,5 +164,10 @@ function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases");
 }
 
-my_release();
+setInterval(function() {
+    console.log(Date.now());
+    my_release();
+}, 5000);
+
+
 //docker();
