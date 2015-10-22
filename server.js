@@ -149,7 +149,7 @@ function check_release(name, url) {
 		console.log("No changes for %s", name);
 	    }
 	} else {
-	    console.log("Hoge Skipping release checking because old release json file doesn't exist: %s", json_file);
+	    console.log("Skipping release checking because old release json file doesn't exist: %s", json_file);
 	}
 
 	write_output(json_file, new_releases_json);
