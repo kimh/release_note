@@ -19,7 +19,7 @@ function read_json_output(file_path) {
     if (fs.existsSync(file_path)) {
 	return JSON.parse(fs.readFileSync(file_path, 'utf8'));
     } else {
-	throw new Error("file doesn't exist: " + file_path);
+	return false;
     }
  }
 
@@ -134,19 +134,24 @@ function check_release(name, url) {
 
     github_standard_release(name, url).then(function(new_releases_json) {
 	var old_releases_json = read_json_output(json_file);
-	var changes = new_release(new_releases_json, old_releases_json);
 
-	if (!_.isEmpty(changes)) {
-	//if (true) {
-	    console.log("New releases for %s", name);
-	    write_output(json_file, new_releases_json);
+	if (old_releases_json) {
+	    var changes = new_release(new_releases_json, old_releases_json);
 
-	    email_subject = "New release for " + name;
-	    email_body = JSON.stringify(changes);
-	    send_update_notification({to: 'yangkookkim@gmail.com', subject: email_subject, body: email_body, dry_run: true});
+	    if (!_.isEmpty(changes)) {
+		//if (true) {
+		console.log("New releases for %s", name);
+		email_subject = "New release for " + name;
+		email_body = JSON.stringify(changes);
+		send_update_notification({to: 'yangkookkim@gmail.com', subject: email_subject, body: email_body, dry_run: true});
+	    } else {
+		console.log("No changes for %s", name);
+	    }
 	} else {
-	    console.log("No changes for %s", name);
+	    console.log("Skipping release checking because old release json file doesn't exist: %s", json_file);
 	}
+
+	write_output(json_file, new_releases_json);
     });
 }
 
