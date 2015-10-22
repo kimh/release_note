@@ -7,7 +7,8 @@ var _ = require('underscore');
 var nodemailer = require('nodemailer');
 //var express = require('express');
 //var app     = express();
-var jsdiff = require('diff');
+//var jsdiff = require('diff');
+var diff = require('deep-diff').diff;
 
 function write_output(output_file, json) {
     fs.writeFile(output_file, JSON.stringify(json, null, 4), function(err){
@@ -115,6 +116,17 @@ function send_update_notification(option) {
     }
 }
 
+function new_release(new_releases_json, old_releases_json) {
+    var changes = [];
+
+    new_releases_json.forEach(function(a) {
+	var diff = old_releases_json.some(function(b) { return _.isEqual(a, b) })
+	if (!diff) { changes.push(a) }
+    })
+
+    return changes
+}
+
 function check_release(name, url) {
     var dir = 'data';
     var json_file = path.join(dir, name + ".json");
@@ -125,20 +137,15 @@ function check_release(name, url) {
 
     github_standard_release(name, url).then(function(new_releases_json) {
 	var old_releases_json = read_json_output(json_file);
+	var changes = new_release(new_releases_json, old_releases_json);
 
-	if (!_.isEqual(old_releases_json, new_releases_json)) {
+	if (!_.isEmpty(changes)) {
 	//if (true) {
 	    console.log("New releases for %s", name);
 	    write_output(json_file, new_releases_json);
 
-	    jsdiff.diffJson(old_releases_json, new_releases_json).forEach(function(part) {
-		if (part.added) {
-		    diff = part.value;
-		}
-	    });
-
 	    email_subject = "New release for " + name;
-	    email_body = JSON.stringify(diff);
+	    email_body = JSON.stringify(changes);
 	    send_update_notification({to: 'yangkookkim@gmail.com', subject: email_subject, body: email_body, dry_run: true});
 	} else {
 	    console.log("No changes for %s", name);
@@ -154,56 +161,42 @@ function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases");
 }
 
-//my_release();
+my_release();
 //docker();
 
-
-
-
-var one = "aaa"
-var other = "aaa bbb"
-
-
-var one = [
-    {
-        "name": "my_release",
-        "version": "0.0.2",
-        "title": "0.0.2 releae",
-        "description": "another releae"
-    },
-    {
-        "name": "my_release",
-        "version": "0.0.1",
-        "title": "0.0.1 release",
-        "description": "this is the first release"
-    }
-]
-
-var other = [
-    {
-        "name": "my_release",
-        "version": "0.0.4",
-        "title": "0.0.4 releaes",
-        "description": ""
-    },
-    {
-        "name": "my_release",
-        "version": "0.0.2",
-        "title": "0.0.2 releae",
-        "description": "another releae"
-    },
-    {
-        "name": "my_release",
-        "version": "0.0.1",
-        "title": "0.0.1 release",
-        "description": "this is the first release"
-    }
-]
-
-
-var diff = jsdiff.diffJson(one, other);
-diff.parsePatch("");
-
-// TODO: get a diff of json nicely.
-
+//var one = [
+//    {
+//        "name": "my_release",
+//        "version": "0.0.2",
+//        "title": "0.0.2 releae",
+//        "description": "another releae"
+//    },
+//    {
+//        "name": "my_release",
+//        "version": "0.0.1",
+//        "title": "0.0.1 release",
+//        "description": "this is the first release"
+//    }
+//]
+//
+//var other = [
+//    {
+//        "name": "my_release",
+//        "version": "0.0.4",
+//        "title": "0.0.4 releaes",
+//        "description": ""
+//    },
+//    {
+//        "name": "my_release",
+//        "version": "0.0.2",
+//        "title": "0.0.2 releae",
+//        "description": "another releae"
+//    },
+//    {
+//        "name": "my_release",
+//        "version": "0.0.1",
+//        "title": "0.0.1 release",
+//        "description": "this is the first release"
+//    }
+//]
 
