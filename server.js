@@ -99,19 +99,11 @@ function send_update_notification(option) {
     	throw new Error("You need to set $RN_EMAIL_PASS for email notification");
     }
 	
-    
-    var mail_options = {
-	from: 'Kim Hirokuni ✔ <yangkookkim@gmail.com>',
-	to: receiver_address,
-	subject: subject,
-	text: body
-    };
-
     if (dry_run) {
 	console.log("Supress sending actual email");
-	console.log(mail_options);
+	console.log(option);
     } else {
-	send_mail(user, pass, mail_options);
+	send_mail(user, pass, option);
     }
 }
 
@@ -130,6 +122,7 @@ function check_release(name, url) {
     var dir = 'data';
     var json_file = path.join(dir, name + ".json");
     var email_subject, email_body;
+    var subscribers = JSON.parse(fs.readFileSync("subscribers.json", 'utf8'));
 
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir);}
 
@@ -141,10 +134,12 @@ function check_release(name, url) {
 
 	    if (!_.isEmpty(changes)) {
 		//if (true) {
-		console.log("New releases for %s", name);
-		email_subject = "New release for " + name;
-		email_body = JSON.stringify(changes);
-		send_update_notification({to: 'yangkookkim@gmail.com', subject: email_subject, body: email_body, dry_run: false});
+		subscribers.forEach(function(s) {
+		    console.log("New releases for %s", name);
+		    email_subject = "New release for " + name;
+		    email_body = JSON.stringify(changes);
+		    send_update_notification({to: s, subject: email_subject, body: email_body, dry_run: true});
+		});
 	    } else {
 		console.log("No changes for %s", name);
 	    }
@@ -160,6 +155,7 @@ function docker() {
     check_release("docker", "https://github.com/docker/docker/releases");
 }
 
+// Just for testing purpose
 function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases");
 }
@@ -168,6 +164,3 @@ setInterval(function() {
     console.log(Date.now());
     my_release();
 }, 60000);
-
-
-//docker();
