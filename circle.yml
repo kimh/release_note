@@ -5,3 +5,9 @@ machine:
 test:
   override:
     - exit 0
+
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: release-note
