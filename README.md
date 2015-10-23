@@ -1,7 +1,7 @@
 [![Circle CI](https://circleci.com/gh/kimh/release_note.svg?style=svg)](https://circleci.com/gh/kimh/release_note)
 
 # ReleaseNote
-ReleaeNote is a notification aggregation service for software releases.
+ReleaseNote is a notification aggregation service for software releases.
 
 ## Why?
 How do you keep track of new releases of software that you are interested in? Subscribe to mailing lists? RSS?
