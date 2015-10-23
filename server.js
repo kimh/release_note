@@ -163,4 +163,5 @@ function my_release() {
 setInterval(function() {
     console.log(Date.now());
     my_release();
-}, 60000);
+    docker();
+}, 6000);
