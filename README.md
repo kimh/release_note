@@ -8,7 +8,7 @@ How do you keep track of new releases of software that you are interested in? Su
 
 Isn't it great if there is a single service that notifies you every new release of your favorite software?
 
-ReleaseNote does this for you. ReleaseNote craws release notes of major software and will notify subscribers when there are new releases.
+ReleaseNote does this for you. ReleaseNote craws release notes of popular software and will notify subscribers when there are new releases.
 
 ## List of tacking releases
 As of now, only tracking docker since that's what I wanted to keep track of, but I'm going to add more very soon.
