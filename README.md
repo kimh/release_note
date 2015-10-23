@@ -10,7 +10,7 @@ Isn't it great if there is a single service that notifies you every new release 
 
 ReleaseNote does this for you. ReleaseNote craws release notes of popular software and will notify subscribers when there are new releases.
 
-## List of tacked releases
+## List of tracked releases
 As of now, only tracking docker since that's what I wanted to keep track of, but I'm going to add more very soon.
 
 - docker https://github.com/docker/docker 
