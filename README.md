@@ -15,6 +15,7 @@ As of now, only tracking docker since that's what I wanted to keep track of, but
 
 - [docker](https://github.com/docker/docker)
 - [npm](https://github.com/npm/npm/releases)
+- [nodejs](https://github.com/nodejs/node/releases)
 
 ## How to subscribe
 Fork this project, add your email address to [subscribers.json](https://github.com/kimh/release_note/blob/master/subscribers.json) and make a PR!
