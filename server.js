@@ -24,14 +24,14 @@ function read_json_output(file_path) {
     }
  }
 
-function github_release(name, url) {
+function parse_github_releases(name, url, selector) {
     var releases_json = [];
 
     return new Promise(function(resolve) {
 	request(url, function(error, response, html){
 	    if(!error){
 		var $ = cheerio.load(html);
-		var releases = $('.release');
+		var releases = $(selector.root);
 
 		releases.each(function(i, release) {
 		    $(release).filter(function() {
@@ -39,9 +39,9 @@ function github_release(name, url) {
     			var version, title, description;
 			var json = { name: name, version: "", title: "", description: "" };
 
-			var version = data.find(".release-meta .css-truncate-target").text().trim()
-			var title   = data.find('.release-body .release-title').text().trim()
-			var desc    = data.find('.release-body .markdown-body').text().trim()
+			var version = data.find(selector.version).text().trim();
+			var title   = data.find(selector.title).text().trim();
+			var desc    = data.find(selector.desc).text().trim();
 			
 			json.version = version;
 			json.title = title;
@@ -58,40 +58,22 @@ function github_release(name, url) {
 
 }
 
+function github_release(name, url) {
+    var selector = {root: ".release",
+		    version: ".release-meta .css-truncate-target",
+		    title: ".release-body .release-title",
+		    desc: ".release-body .markdown-body"};
+
+    return parse_github_releases(name, url, selector);
+}
+
 function github_release_with_tags(name, url) {
-    var releases_json = [];
+    var selector = {root: ".tag-info",
+		    version: ".tag-name",
+		    title: ".tag-name",
+		    desc: ".commit-desc .text-small"};
 
-    return new Promise(function(resolve) {
-
-	request(url, function(error, response, html){
-	    if(!error){
-		var $ = cheerio.load(html);
-		var releases = $('.tag-info');
-		var latest = releases.first();
-
-		releases.each(function(i, release) {
-		    $(release).filter(function() {
-			var data = $(this);
-    			var version, title, description;
-			var json = { name: name, version: "", title: "", description: "" };
-
-			var version = data.find(".tag-name").text().trim();
-			var title   = data.find(".tag-name").text().trim();
-			var desc    = data.find('.commit-desc .text-small').text().trim()
-
-			json.version = version;
-			json.title = title;
-			json.description = desc;
-
-			releases_json.push(json)
-		    })
-		});
-
-		resolve(releases_json);
-	    }   
-	});
-    })
-
+    return parse_github_releases(name, url, selector);
 }
 
 function send_mail(user, pass, mail_opt) {
@@ -201,9 +183,9 @@ function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases", github_release);
 }
 
-setInterval(function() {
+//setInterval(function() {
     my_release();
     nodejs();
     npm();
     docker();
-}, 60000);
+//}, 60000);
