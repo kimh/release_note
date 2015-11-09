@@ -161,6 +161,6 @@ function my_release() {
 }
 
 setInterval(function() {
-    //my_release();
+    my_release();
     docker();
 }, 60000);
