@@ -138,7 +138,7 @@ function check_release(name, url) {
 		    console.log("New releases for %s", name);
 		    email_subject = "New release for " + name;
 		    email_body = JSON.stringify(changes);
-		    send_update_notification({to: s, subject: email_subject, body: email_body, dry_run: true});
+		    send_update_notification({to: s, subject: email_subject, body: email_body, dry_run: false});
 		});
 	    } else {
 		console.log("No changes for %s", name);
