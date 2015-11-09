@@ -24,17 +24,14 @@ function read_json_output(file_path) {
     }
  }
 
-function github_standard_release(name, url) {
+function github_release(name, url) {
     var releases_json = [];
 
-
     return new Promise(function(resolve) {
-
 	request(url, function(error, response, html){
 	    if(!error){
 		var $ = cheerio.load(html);
 		var releases = $('.release');
-		var latest = releases.first();
 
 		releases.each(function(i, release) {
 		    $(release).filter(function() {
@@ -58,7 +55,43 @@ function github_standard_release(name, url) {
 	    }   
 	});
     })
-	
+
+}
+
+function github_release_with_tags(name, url) {
+    var releases_json = [];
+
+    return new Promise(function(resolve) {
+
+	request(url, function(error, response, html){
+	    if(!error){
+		var $ = cheerio.load(html);
+		var releases = $('.tag-info');
+		var latest = releases.first();
+
+		releases.each(function(i, release) {
+		    $(release).filter(function() {
+			var data = $(this);
+    			var version, title, description;
+			var json = { name: name, version: "", title: "", description: "" };
+
+			var version = data.find(".tag-name").text().trim();
+			var title   = data.find(".tag-name").text().trim();
+			var desc    = data.find('.commit-desc .text-small').text().trim()
+
+			json.version = version;
+			json.title = title;
+			json.description = desc;
+
+			releases_json.push(json)
+		    })
+		});
+
+		resolve(releases_json);
+	    }   
+	});
+    })
+
 }
 
 function send_mail(user, pass, mail_opt) {
@@ -118,7 +151,7 @@ function new_release(new_releases_json, old_releases_json) {
     return changes
 }
 
-function check_release(name, url) {
+function check_release(name, url, parser_fn) {
     var dir = 'data';
     var json_file = path.join(dir, name + ".json");
     var email_subject, email_body;
@@ -126,7 +159,7 @@ function check_release(name, url) {
 
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir);}
 
-    github_standard_release(name, url).then(function(new_releases_json) {
+    parser_fn(name, url).then(function(new_releases_json) {
 	var old_releases_json = read_json_output(json_file);
 
 	if (old_releases_json) {
@@ -152,20 +185,25 @@ function check_release(name, url) {
 }
 
 function docker() {
-    check_release("docker", "https://github.com/docker/docker/releases");
+    check_release("docker", "https://github.com/docker/docker/releases", github_release);
 }
 
 function npm() {
-    check_release("npm", "https://github.com/npm/npm/releases");
+    check_release("npm", "https://github.com/npm/npm/releases", github_release);
+}
+
+function nodejs() {
+    check_release("nodejs", "https://github.com/nodejs/node/releases", github_release_with_tags)
 }
 
 // Just for testing purpose
 function my_release() {
-    check_release("my_release", "https://github.com/kimh/release_note/releases");
+    check_release("my_release", "https://github.com/kimh/release_note/releases", github_release);
 }
 
 setInterval(function() {
     my_release();
+    nodejs();
     npm();
     docker();
 }, 60000);
