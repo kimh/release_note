@@ -183,9 +183,9 @@ function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases", github_release);
 }
 
-//setInterval(function() {
+setInterval(function() {
     my_release();
     nodejs();
     npm();
     docker();
-//}, 60000);
+}, 60000);
