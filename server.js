@@ -155,6 +155,10 @@ function docker() {
     check_release("docker", "https://github.com/docker/docker/releases");
 }
 
+function npm() {
+    check_release("npm", "https://github.com/npm/npm/releases");
+}
+
 // Just for testing purpose
 function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases");
@@ -162,5 +166,6 @@ function my_release() {
 
 setInterval(function() {
     my_release();
+    npm();
     docker();
 }, 60000);

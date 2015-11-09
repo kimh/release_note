@@ -13,7 +13,8 @@ ReleaseNote does this for you. ReleaseNote craws release notes of popular softwa
 ## List of tracked releases
 As of now, only tracking docker since that's what I wanted to keep track of, but I'm going to add more very soon.
 
-- docker https://github.com/docker/docker 
+- [docker](https://github.com/docker/docker)
+- [npm](https://github.com/npm/npm/releases)
 
 ## How to subscribe
 Fork this project, add your email address to [subscribers.json](https://github.com/kimh/release_note/blob/master/subscribers.json) and make a PR!
