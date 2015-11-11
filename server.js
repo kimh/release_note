@@ -170,6 +170,10 @@ function docker() {
     check_release("docker", "https://github.com/docker/docker/releases", github_release);
 }
 
+function docker_compose() {
+    check_release("docker-compose", "https://github.com/docker/compose/releases", github_release);
+}
+
 function npm() {
     check_release("npm", "https://github.com/npm/npm/releases", github_release);
 }
@@ -186,6 +190,8 @@ function jruby() {
 function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases", github_release);
 }
+
+docker_compose();
 
 setInterval(function() {
     my_release();

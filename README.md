@@ -13,7 +13,8 @@ ReleaseNote does this for you. ReleaseNote craws release notes of popular softwa
 ## List of tracked releases
 As of now, only tracking docker since that's what I wanted to keep track of, but I'm going to add more very soon.
 
-- [docker](https://github.com/docker/docker)
+- [docker](https://github.com/docker/docker/releases)
+- [docker-compose](https://github.com/docker/compose/releases)
 - [npm](https://github.com/npm/npm/releases)
 - [nodejs](https://github.com/nodejs/node/releases)
 - [jruby](https://github.com/jruby/jruby/releases)
