@@ -178,6 +178,10 @@ function nodejs() {
     check_release("nodejs", "https://github.com/nodejs/node/releases", github_release_with_tags)
 }
 
+function jruby() {
+    check_release("jruby", "https://github.com/jruby/jruby/releases", github_release_with_tags)
+}
+
 // Just for testing purpose
 function my_release() {
     check_release("my_release", "https://github.com/kimh/release_note/releases", github_release);
@@ -188,4 +192,5 @@ setInterval(function() {
     nodejs();
     npm();
     docker();
+    jruby();
 }, 60000);
